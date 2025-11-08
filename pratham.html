@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pratham | Professional Video Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+  background: #000;
+  position: relative;
+}
+
+#bgVideo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: -3;
+  opacity: 1000%;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, rgba(0,255,200,0.1), rgba(0,188,212,0.1), rgba(32,58,67,0.1), rgba(15,32,39,0.1));
+  background-size: 400% 400%;
+  animation: gradientFlow 12s ease infinite;
+  z-index: -2;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+canvas#bgCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: -1;
+}
+
+header {
+  text-align: center;
+  padding: 300px 20px 140px;
+  position: relative;
+  z-index: 2;
+}
+header h1 {
+  font-size: 4.5rem;
+  font-weight: 900;
+  text-transform: lowercase;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #00fff0, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 300% 300%;
+  animation: textShimmer 6s infinite linear;
+}
+header p {
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-top: 10px;
+  background: linear-gradient(90deg, #ffffff, #00fff0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 300% 300%;
+  animation: textShimmer 8s infinite linear;
+}
+@keyframes textShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 35px;
+  padding: 100px 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.project-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  text-align: center;
+  padding: 25px;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+  transition: all 0.5s ease;
+  overflow: hidden;
+}
+
+.project-card:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.project-card span {
+  display: block;
+  font-weight: 700;
+  font-size: 1.5rem;
+  background: linear-gradient(90deg, #00fff0, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 6s infinite linear;
+  margin: 12px 0;
+}
+
+.project-card a {
+  text-decoration: none;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  transition: color 0.3s ease;
+}
+.project-card a:hover { color: #00fff0; }
+
+/* Video inside project cards */
+.project-video {
+  width: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+  max-height: 200px;
+  transition: transform 0.5s ease;
+}
+.project-card:hover .project-video {
+  transform: scale(1.05);
+}
+
+.contact {
+  position: relative;
+  z-index: 2;
+  padding: 100px 20px;
+  text-align: center;
+  background: transparent;
+}
+.contact h2 {
+  font-size: 2.8rem;
+  margin-bottom: 25px;
+  background: linear-gradient(90deg, #00fff0, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 6s infinite linear;
+}
+.contact p {
+  color: rgba(255,255,255,0.8);
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+.contact form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.05);
+  padding: 40px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 30px rgba(0,255,255,0.1);
+}
+.contact input,
+.contact textarea {
+  width: 100%;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+.contact input:focus,
+.contact textarea:focus {
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 0 10px rgba(0,255,255,0.4);
+}
+.contact button {
+  background: #00fff0;
+  color: #000;
+  border: none;
+  padding: 14px 40px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+.contact button:hover {
+  transform: scale(1.08);
+  background: #00bfff;
+}
+
+#successPopup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,255,200,0.1);
+  backdrop-filter: blur(20px);
+  padding: 40px 60px;
+  border-radius: 25px;
+  box-shadow: 0 0 40px rgba(0,255,255,0.4);
+  text-align: center;
+  z-index: 100;
+  animation: fadeIn 0.5s ease forwards;
+}
+#successPopup h3 {
+  font-size: 1.5rem;
+  background: linear-gradient(90deg,#00fff0,#fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+#successPopup p {
+  color: rgba(255,255,255,0.9);
+  font-size: 1rem;
+}
+
+.chat-icon {
+  position: fixed;
+  bottom: 30px; right: 30px;
+  background: rgba(0,255,200,0.7);
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; cursor: pointer;
+  box-shadow: 0 0 25px rgba(0,255,200,0.7);
+  transition: 0.3s ease;
+  z-index: 10;
+}
+.chat-icon:hover { transform: scale(1.15); }
+.chat-box {
+  display: none;
+  position: fixed;
+  bottom: 100px; right: 30px;
+  width: 360px; max-height: 500px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  z-index: 10;
+  flex-direction: column;
+}
+.chat-header {
+  background: rgba(0,255,200,0.2);
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+}
+.chat-content {
+  flex: 1; padding: 12px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px;
+  font-size: 0.9rem;
+}
+.chat-message {
+  background: rgba(255,255,255,0.07);
+  padding: 10px 14px;
+  border-radius: 14px;
+  max-width: 80%;
+  animation: fadeIn 0.4s ease forwards;
+}
+.bot { align-self: flex-start; color: #00ffc8; }
+.user { align-self: flex-end; background: rgba(0,255,200,0.2); color: #fff; }
+.chat-input { display: flex; border-top: 1px solid rgba(255,255,255,0.1); }
+.chat-input input { flex: 1; background: transparent; border: none; color: #fff; padding: 14px; outline: none; }
+.chat-input button { background: #00ffc8; border: none; color: #000; padding: 0 18px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+.chat-input button:hover { background: #00b3ff; }
+
+footer {
+  text-align: center;
+  padding: 30px 0;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 2;
+  background: transparent;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+@media(max-width:768px){
+  header h1 { font-size: 3.2rem; }
+  header p { font-size: 1.1rem; }
+  .projects { padding: 80px 20px; gap: 25px; }
+  .chat-box { width: 90%; right: 5%; bottom: 80px; }
+}
+@media(max-width:480px){
+  header h1 { font-size: 2.5rem; }
+  header p { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<video autoplay muted loop playsinline id="bgVideo">
+  <source src="background.mp4" type="video/mp4">
+</video>
+<canvas id="bgCanvas"></canvas>
+
+<header id="hero">
+  <h1>Pratham</h1>
+  <p>Professional Video Editor | Creating Visual Magic</p>
+</header>
+
+ <section class="projects">
+  <div class="project-card">
+    <video  muted autoplay class="project-video">
+      <source src="background.mp4" type="video/mp4">
+    </video>
+    <span>Cinematic Edits</span>
+    <a href="#">View Project</a>
+  </div>
+  <div class="project-card">
+    <video autoplay muted loop playsinline class="project-video">
+      <source src="music.mp4" type="video/mp4">
+    </video>
+    <span>Music Videos</span>
+    <a href="#">View Project</a>
+  </div>
+  <div class="project-card">
+    <video autoplay muted loop playsinline class="project-video">
+      <source src="shortfilm.mp4" type="video/mp4">
+    </video>
+    <span>Short Films</span>
+    <a href="#">View Project</a>
+  </div>
+  <div class="project-card">
+    <video autoplay muted loop playsinline class="project-video">
+      <source src="brandad.mp4" type="video/mp4">
+    </video>
+    <span>Brand Ads</span>
+    <a href="#">View Project</a>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <h2>Contact Me</h2>
+  <p>Have a project in mind or want to collaborate? Let’s create something amazing together.</p>
+  <form action="https://formspree.io/f/meovjegj" method="POST">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
+    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+<div id="successPopup">
+  <h3> Message Sent!</h3>
+  <p>Thank you for reaching out — I’ll get back to you soon.</p>
+</div>
+
+<div class="chat-icon" id="chatIcon">💬</div>
+<div class="chat-box" id="chatBox">
+  <div class="chat-header">Pratham Assistant</div>
+  <div class="chat-content" id="chatContent">
+    <div class="chat-message bot">Hi there!<br>How can I help you today?</div>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Type your message...">
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
+
+<footer>© 2025 Pratham | Video Editor Portfolio</footer>
+
+<script>
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas() { canvas.width = innerWidth; canvas.height = innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 0.5;
+    this.speedX = Math.random() * 0.7 - 0.35;
+    this.speedY = Math.random() * 0.7 - 0.35;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+  }
+  draw(color) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+}
+function initParticles() {
+  particles = [];
+  for (let i = 0; i < 120; i++) particles.push(new Particle());
+}
+function animate() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const hue = (Date.now()/25) % 360;
+  const color = `hsla(${hue}, 100%, 60%, 0.6)`;
+  particles.forEach(p=>{p.update(); p.draw(color);});
+  requestAnimationFrame(animate);
+}
+initParticles(); animate();
+
+const chatIcon = document.getElementById('chatIcon');
+const chatBox = document.getElementById('chatBox');
+chatIcon.onclick = () => { chatBox.style.display = chatBox.style.display==='flex' ? 'none' : 'flex'; };
+
+document.querySelector('form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const popup = document.getElementById('successPopup');
+  const response = await fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  });
+  if (response.ok) {
+    popup.style.display = 'block';
+    form.reset();
+    setTimeout(()=> popup.style.display='none', 3000);
+  } else {
+    alert(' Something went wrong. Please try again.');
+  }
+});
+
+const bgVideo = document.getElementById('bgVideo');
+bgVideo.addEventListener('ended', () => { bgVideo.currentTime = 0; bgVideo.play(); });
+
+const OPENROUTER_API_KEY = "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"; 
+const MODEL_ID = "minimax/minimax-m2:free";
+
+const sendBtn = document.getElementById('sendBtn');
+const userInput = document.getElementById('userInput');
+const chatContent = document.getElementById('chatContent');
+
+const BOT_KNOWLEDGE = `
+You are Pratham's AI assistant.
+You represent Pratham, a professional video editor who creates cinematic edits, music videos, short films, and brand ads.
+Tone: Friendly, creative, professional, and helpful.
+Portfolio highlights:
+- Cinematic edits with smooth transitions and emotional storytelling.
+- High-quality music videos using beat-synced effects.
+- Short films with color grading.
+Contact info: Use the website contact form for serious inquiries.
+Never share personal data or pricing unless asked politely.
+If a user asks about services, respond like:
+"Pratham specializes in cinematic edits, music videos, and ad films. Want me to describe his workflow or past projects?"
+`;
+
+let chatHistory = [{ role: "system", content: BOT_KNOWLEDGE }];
+
+async function sendMessage() {
+  const userMessage = userInput.value.trim();
+  if (!userMessage) return;
+
+  appendMessage(userMessage, 'user');
+  userInput.value = '';
+
+  const botMsgDiv = appendMessage('...', 'bot');
+
+  chatHistory.push({ role: "user", content: userMessage });
+
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ model: MODEL_ID, messages: chatHistory })
+    });
+
+    const data = await response.json();
+    const botReply = data?.choices?.[0]?.message?.content || "Sorry, I didn’t understand that.";
+
+    botMsgDiv.textContent = botReply;
+    chatHistory.push({ role: "assistant", content: botReply });
+  } catch (err) {
+    botMsgDiv.textContent = " Connection error. Please try again.";
+    console.error(err);
+  }
+
+  chatContent.scrollTop = chatContent.scrollHeight;
+}
+
+function appendMessage(content, role) {
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `chat-message ${role}`;
+  msgDiv.textContent = content;
+  chatContent.appendChild(msgDiv);
+  chatContent.scrollTop = chatContent.scrollHeight;
+  return msgDiv;
+}
+document.querySelectorAll('.project-video').forEach(video => {
+  video.addEventListener('mouseenter', () => video.play());
+  video.addEventListener('mouseleave', () => video.pause());
+});
+
+sendBtn.onclick = sendMessage;
+userInput.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
+</script>
+<a href="sss">m</a>
+</body>
+</html>
